@@ -1,14 +1,19 @@
 use actix_web::{get, post, body::BoxBody, http::header::ContentType, web, App, HttpResponse, HttpServer, Responder, HttpRequest};
 use serde::{Deserialize, Serialize};
 //
-// #[get("/index")]
+// "/index"
 //
-#[derive(Debug, Serialize, Deserialize)]
-struct MyObj {
-    name: &'static str,
+#[derive(Deserialize, Serialize)]
+struct MyResponse {
+    name: String,
 }
+#[derive(Deserialize, Serialize)]
+struct MyRequest {
+    username: String,
+}
+
 // Responder
-impl Responder for MyObj {
+impl Responder for MyResponse {
     type Body = BoxBody;
     fn respond_to(self, _req: &HttpRequest) -> HttpResponse<Self::Body> {
         let body = serde_json::to_string(&self).unwrap();
@@ -18,9 +23,9 @@ impl Responder for MyObj {
             .body(body)
     }
 }
-#[get("/index")]
-async fn index() -> impl Responder {
-    MyObj { name: "user" }
+#[post("/index")]
+async fn index(data: web::Json<MyRequest>) -> impl Responder {
+    MyResponse { name: data.username.clone() }
 }
 //
 // #[get("/")]
