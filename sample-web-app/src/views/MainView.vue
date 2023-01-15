@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue";
-import Camera from "@/components/WebRTCCamera.vue";
+// Cannot use in insecure environment
+// import Camera from "@/components/WebRTCCamera.vue";
 
 interface Book {
   title: string;
@@ -17,7 +18,7 @@ const book: Book = reactive({ title: "Vue 3 Guide" });
     <input type="text" v-model="book.title" />
     <p>{{ book.title }}</p>
 
-    <Camera></Camera>
+    // <Camera></Camera>
   </div>
 </template>
 
