@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from "vue-router";
 import HelloWorld from "./components/HelloWorld.vue";
+import MainView from "./views/MainView.vue";
 </script>
 
 <template>
-  <header>
-    <!-- <img
+  <!-- <header> -->
+  <!-- <img
       alt="Vue logo"
       class="logo"
       src="@/assets/logo.svg"
@@ -13,17 +14,18 @@ import HelloWorld from "./components/HelloWorld.vue";
       height="125"
     /> -->
 
-    <div class="wrapper">
-      <!-- <HelloWorld msg="You did it!" /> -->
+  <!-- <div class="wrapper"> -->
+  <!-- <HelloWorld msg="You did it!" /> -->
 
-      <nav>
+  <!-- <nav>
         <RouterLink to="/">Main</RouterLink>
         <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
+      </nav> -->
+  <!-- </div> -->
+  <!-- </header> -->
 
-  <RouterView />
+  <!-- <RouterView /> -->
+  <MainView />
 </template>
 
 <style scoped>

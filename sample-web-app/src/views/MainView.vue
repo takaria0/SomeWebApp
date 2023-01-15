@@ -58,6 +58,7 @@ onMounted(() => {
 
 <template>
   <div class="main">
+    <h1></h1>
     <h1>Vue 3 & Rust on VPS with Nginx</h1>
 
     <p>
@@ -66,7 +67,8 @@ onMounted(() => {
     </p>
     <input
       type="text"
-      size="20"
+      size="30"
+      placeholder="What is your name?"
       v-model="exampleResponse.title"
       @change="postData"
     />
