@@ -1,7 +1,7 @@
 # SomeWebApp
 
 - Backend (Rust)
-- Frontend (Undefined)
+- Frontend (Vue.js (Composition API))
 
 ```
 source $HOME/.cargo/env
@@ -12,3 +12,10 @@ cargo run
 
 
 ```
+
+```
+npm i
+npm run build
+```
+
+# Production

@@ -23,9 +23,13 @@ impl Responder for MyResponse {
             .body(body)
     }
 }
+#[get("/index")]
+async fn get_index() -> impl Responder {
+    MyResponse { name: "Hello guys, I am from Rust programming language.".to_string() }
+}
 #[post("/index")]
-async fn index(data: web::Json<MyRequest>) -> impl Responder {
-    MyResponse { name: data.username.clone() }
+async fn post_index(data: web::Json<MyRequest>) -> impl Responder {
+    MyResponse { name: data.username.clone() + ", from Rust" }
 }
 //
 // #[get("/")]
@@ -45,6 +49,7 @@ async fn echo(req_body: String) -> impl Responder {
 // #[get("/hey")]
 //
 async fn manual_hello() -> impl Responder {
+    println!("manual_hello");
     HttpResponse::Ok().body("Hey there!")
 }
 //
@@ -56,10 +61,11 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .service(hello)
             .service(echo)
-            .service(index)
+            .service(get_index)
+            .service(post_index)
             .route("/hey", web::get().to(manual_hello))
     })
-    .bind(("127.0.0.1", 8080))?
+    .bind(("127.0.0.1", 8081))?
     .run()
     .await
 }
