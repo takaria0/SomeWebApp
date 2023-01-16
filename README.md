@@ -18,4 +18,18 @@ npm i
 npm run build
 ```
 
+## Backend
+
+GraphQL
+`http://localhost:8081/graphql`
+
+```graphql
+{
+  totalPhotos
+  hello
+}
+```
+
+## Frontend
+
 # Production

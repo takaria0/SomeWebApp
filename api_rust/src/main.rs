@@ -1,5 +1,62 @@
-use actix_web::{get, post, body::BoxBody, http::header::ContentType, web, App, HttpResponse, HttpServer, Responder, HttpRequest};
+use actix_web::web::Data;
+use actix_web::{get, post, guard, body::BoxBody, http::header::ContentType, web, App, HttpResponse, HttpServer, Responder, HttpRequest, Result};
 use serde::{Deserialize, Serialize};
+use async_graphql::http::{playground_source, GraphQLPlaygroundConfig};
+use async_graphql::{EmptyMutation, EmptySubscription, Object, Schema};
+use async_graphql_actix_web::{GraphQLRequest, GraphQLResponse};
+
+//
+//
+// "/graphql"
+//
+//
+struct Query ;
+
+#[Object]
+impl Query {
+    async fn total_photos(&self) -> usize {
+        42
+    }
+    async fn hello(&self) -> String {
+        "Hello world!".to_string()
+    }
+}
+
+
+// struct Photo {
+//     name: String,
+//     description: String,
+// }
+
+// struct Mutation;
+
+// #[Object]
+// impl Mutation {
+//     async fn post_photo(&self, name: String, description: String) -> bool {
+//         let photo = Photo {
+//             name,
+//             description
+//         };
+//         PHOTOS.lock().unwrap().push(photo);
+//         true
+//     }
+//     async fn total_photos(&self) -> usize {
+//         PHOTOS.lock().unwrap().len()
+//     }
+// }
+
+type ApiSchema = Schema<Query, EmptyMutation, EmptySubscription>;
+
+async fn graphql_index(schema: web::Data<ApiSchema>, req: GraphQLRequest) -> GraphQLResponse {
+    schema.execute(req.into_inner()).await.into()
+}
+
+async fn graphql_index_playground() -> Result<HttpResponse> {
+    let source = playground_source(GraphQLPlaygroundConfig::new("/graphql").subscription_endpoint("/graphql"));
+    Ok(HttpResponse::Ok()
+        .content_type("text/html; charset=utf-8")
+        .body(source))
+}
 //
 // "/index"
 //
@@ -57,8 +114,13 @@ async fn manual_hello() -> impl Responder {
 //
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+
     HttpServer::new(|| {
+        let schema = Schema::build(Query, EmptyMutation, EmptySubscription).finish();
         App::new()
+            .app_data(Data::new(schema.clone()))
+            .service(web::resource("/graphql").guard(guard::Post()).to(graphql_index))
+            .service(web::resource("/graphql").guard(guard::Get()).to(graphql_index_playground))
             .service(hello)
             .service(echo)
             .service(get_index)
